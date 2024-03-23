@@ -48,7 +48,7 @@ func EjecutoLambda(ctx context.Context, req events.APIGatewayProxyRequest) (*eve
 	}
 
 	// esto lo que hace es que, en el path parameters va a venir: twittergo/login, le quita el path twittergo
-	path := strings.Replace(req.PathParameters["twitterGo"], os.Getenv("UrlPrefix"), "", -1)
+	path := strings.Replace(req.PathParameters["twittergo"], os.Getenv("UrlPrefix"), "", -1)
 
 	awsgo.Ctx = context.WithValue(awsgo.Ctx, models.Key("path"), path)
 	awsgo.Ctx = context.WithValue(awsgo.Ctx, models.Key("method"), req.HTTPMethod)
