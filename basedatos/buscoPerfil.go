@@ -11,7 +11,7 @@ import (
 func BuscoPerfil(ID string) (models.Usuario, error) {
 	ctx := context.TODO()
 	db := MongoCN.Database(DatabaseName)
-	col := db.Collection("usuarios")
+	col := db.Collection("usuario")
 
 	var perfil models.Usuario
 	objID, _ := primitive.ObjectIDFromHex(ID)
