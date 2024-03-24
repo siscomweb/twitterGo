@@ -3,6 +3,7 @@ package jwt
 import (
 	"errors"
 	"strings"
+	"twitterGo/basedatos"
 	"twitterGo/models"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -27,11 +28,17 @@ func ProcesoToken(tk string, JWTSign string) (*models.Claim, bool, string, error
 	})
 	if err == nil {
 		// Rutina que chequea contra la BD
+		_, encontrado, _ := basedatos.ChequeoYaExisteUsuario(claims.Email)
+		if encontrado {
+			Email = claims.Email
+			IDUsuario = claims.ID.Hex()
+		}
+		return &claims, encontrado, IDUsuario, nil
 	}
 
 	if !tkn.Valid {
-		return &claims, false, string(""), errors.New("Token Inválido")
-		// esto es lo que va a llegarle a PostMan
+		return &claims, false, string(""), errors.New("> token incorrecto")
+		// esto es lo que va a llegarle a Postman
 	}
 
 	//&claims trae los datos del token: usuario, fecha expiración, etc.
