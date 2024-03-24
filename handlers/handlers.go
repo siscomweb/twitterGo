@@ -18,11 +18,13 @@ func Manejadores(ctx context.Context, request events.APIGatewayProxyRequest) mod
 
 	isOK, statusCode, msg, claim := validoAuthorization(ctx, request)
 	if !isOK {
+		fmt.Println("Error en la autenticación")
 		r.Status = statusCode
 		r.Message = msg
 		return r
 	}
 
+	//fmt.Println("Recibiendo método: " + ctx.Value(models.Key("method")).(string) + " - Path: " + ctx.Value(models.Key("path")).(string))
 	switch ctx.Value(models.Key("method")).(string) {
 	case "POST":
 		switch ctx.Value(models.Key("path")).(string) {
@@ -30,12 +32,26 @@ func Manejadores(ctx context.Context, request events.APIGatewayProxyRequest) mod
 			return routers.Registro(ctx)
 		case "login":
 			return routers.Login(ctx)
+		case "tweet":
+			return routers.GraboTweet(ctx, claim)
+		case "subirAvatar":
+			return routers.UploadImage(ctx, "A", request, claim)
+		case "subirBanner":
+			return routers.UploadImage(ctx, "B", request, claim)
+		case "altaRelacion":
+			return routers.AltaRelacion(ctx, request, claim)
 		}
 	//
 	case "GET":
 		switch ctx.Value(models.Key("path")).(string) {
 		case "verperfil":
 			return routers.VerPerfil(request)
+		case "leoTweets":
+			return routers.LeoTweets(request)
+		case "obtenerAvatar":
+			return routers.ObtenerImagen(ctx, "A", request, claim)
+		case "obtenerBanner":
+			return routers.ObtenerImagen(ctx, "B", request, claim)
 		}
 		//
 	case "PUT":
@@ -46,7 +62,8 @@ func Manejadores(ctx context.Context, request events.APIGatewayProxyRequest) mod
 		//
 	case "DELETE":
 		switch ctx.Value(models.Key("path")).(string) {
-
+		case "eliminarTweet":
+			return routers.EliminarTweet(request, claim)
 		}
 		//
 	}
