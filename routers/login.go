@@ -20,7 +20,7 @@ func Login(ctx context.Context) models.RespApi {
 	body := ctx.Value(models.Key("body")).(string)
 	err := json.Unmarshal([]byte(body), &t)
 	if err != nil {
-		r.Message = "Usuario y/o Contraseña Inválidos " + err.Error()
+		r.Message = "Usuario y/o Contraseña Inválidos. >" + err.Error()
 		return r
 	}
 	if len(t.Email) == 0 {
@@ -29,7 +29,7 @@ func Login(ctx context.Context) models.RespApi {
 	}
 	userData, existe := basedatos.IntentoLogin(t.Email, t.Password)
 	if !existe {
-		r.Message = "Usuario y/o Contraseña Inválidos " + err.Error()
+		r.Message = "Usuario y/o Contraseña Inválidos."
 		return r
 	}
 
